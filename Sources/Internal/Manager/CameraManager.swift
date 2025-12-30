@@ -88,18 +88,25 @@ extension CameraManager {
             return
         }
 
-        try await permissionsManager.requestAccess(parent: self)
+        #if targetEnvironment(simulator)
+            // On Simulator, skip camera setup and show mock preview
+            try cameraMetalView.setup(parent: self)
+            cameraGridView.setup(parent: self)
+            attributes.isReady = true
+        #else
+            try await permissionsManager.requestAccess(parent: self)
 
-        setupCameraLayer()
-        try setupDeviceInputs()
-        try setupDeviceOutput()
-        try setupFrameRecorder()
-        notificationCenterManager.setup(parent: self)
-        motionManager.setup(parent: self)
-        try cameraMetalView.setup(parent: self)
-        cameraGridView.setup(parent: self)
+            setupCameraLayer()
+            try setupDeviceInputs()
+            try setupDeviceOutput()
+            try setupFrameRecorder()
+            notificationCenterManager.setup(parent: self)
+            motionManager.setup(parent: self)
+            try cameraMetalView.setup(parent: self)
+            cameraGridView.setup(parent: self)
 
-        startSession()
+            startSession()
+        #endif
     }
 
     /// Resumes the camera session after it was cancelled (e.g., returning from fullScreenCover)

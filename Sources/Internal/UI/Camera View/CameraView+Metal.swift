@@ -35,7 +35,36 @@ extension CameraMetalView {
         self.assignInitialValues(parent: parent, metalDevice: metalDevice)
         self.configureMetalView(metalDevice: metalDevice)
         self.addToParent(parent.cameraView)
+
+        #if targetEnvironment(simulator)
+            setupSimulatorMockPreview(parent: parent)
+        #endif
     }
+
+    #if targetEnvironment(simulator)
+        private func setupSimulatorMockPreview(parent: CameraManager) {
+            print("🎬 [Simulator] setupSimulatorMockPreview called")
+
+            // Load mock image from app bundle (Development Assets)
+            guard let mockImage = UIImage(named: "MockCameraPreview") else {
+                print("❌ [Simulator] Failed to load MockCameraPreview image")
+                return
+            }
+            print("✅ [Simulator] MockCameraPreview loaded: \(mockImage.size)")
+
+            guard let cgImage = mockImage.cgImage else {
+                print("❌ [Simulator] Failed to get cgImage")
+                return
+            }
+            print("✅ [Simulator] cgImage obtained")
+
+            let ciImage = CIImage(cgImage: cgImage)
+            currentFrame = ciImage
+            parent.cameraView.alpha = 1
+            print("✅ [Simulator] currentFrame set, calling draw()")
+            draw()
+        }
+    #endif
 }
 
 extension CameraMetalView {
