@@ -8,48 +8,49 @@
 //
 //  Copyright ©2024 Mijick. All rights reserved.
 
-
 import SwiftUI
 
 extension DefaultCameraScreen { struct CaptureButton: View {
     let outputType: CameraOutputType
     let isRecording: Bool
-    let action: () -> ()
-
+    let action: () -> Void
 
     var body: some View {
         Button(action: action, label: createButtonLabel).buttonStyle(ButtonScaleStyle())
     }
 }}
-private extension DefaultCameraScreen.CaptureButton {
-    func createButtonLabel() -> some View {
+extension DefaultCameraScreen.CaptureButton {
+    fileprivate func createButtonLabel() -> some View {
         ZStack {
             createBackground()
             createBorders()
         }.frame(width: 72, height: 72)
     }
 }
-private extension DefaultCameraScreen.CaptureButton {
-    func createBackground() -> some View {
+
+extension DefaultCameraScreen.CaptureButton {
+    fileprivate func createBackground() -> some View {
         RoundedRectangle(cornerRadius: backgroundCornerRadius, style: .continuous)
             .fill(backgroundColor)
             .padding(backgroundPadding)
     }
-    func createBorders() -> some View {
+
+    fileprivate func createBorders() -> some View {
         Circle().stroke(Color(.mijickBackgroundInverted), lineWidth: 2.5)
     }
 }
-private extension DefaultCameraScreen.CaptureButton {
-    var backgroundColor: Color { switch outputType {
-        case .photo: .init(.mijickBackgroundInverted)
-        case .video: .init(.mijickBackgroundRed)
+
+extension DefaultCameraScreen.CaptureButton {
+    fileprivate var backgroundColor: Color { switch outputType {
+    case .photo: .init(.mijickBackgroundInverted)
+    case .video: .init(.mijickBackgroundRed)
     }}
-    var backgroundCornerRadius: CGFloat { switch isRecording {
-        case true: 6
-        case false: 36
+    fileprivate var backgroundCornerRadius: CGFloat { switch isRecording {
+    case true: 6
+    case false: 36
     }}
-    var backgroundPadding: CGFloat { switch isRecording {
-        case true: 20
-        case false: 4
+    fileprivate var backgroundPadding: CGFloat { switch isRecording {
+    case true: 20
+    case false: 4
     }}
 }

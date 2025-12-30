@@ -8,7 +8,6 @@
 //
 //  Copyright ©2024 Mijick. All rights reserved.
 
-
 import SwiftUI
 
 class CameraGridView: UIView {
@@ -16,6 +15,7 @@ class CameraGridView: UIView {
 }
 
 // MARK: Setup
+
 extension CameraGridView {
     func setup(parent: CameraManager) {
         self.parent = parent
@@ -25,6 +25,7 @@ extension CameraGridView {
 }
 
 // MARK: Set Visibility
+
 extension CameraGridView {
     func setVisibility(_ isVisible: Bool) {
         UIView.animate(withDuration: 0.2) { self.alpha = isVisible ? 1 : 0 }
@@ -33,6 +34,7 @@ extension CameraGridView {
 }
 
 // MARK: Draw
+
 extension CameraGridView {
     override func draw(_ rect: CGRect) {
         clearOldLayersBeforeDraw()
@@ -59,19 +61,21 @@ extension CameraGridView {
         layer.addSublayer(firstRowLayer)
 
         let secondRowPath = UIBezierPath()
-        secondRowPath.move(to: CGPoint(x: 0, y: ( 2 * bounds.height) / 3))
-        secondRowPath.addLine(to: CGPoint(x: bounds.width, y: ( 2 * bounds.height) / 3))
+        secondRowPath.move(to: CGPoint(x: 0, y: (2 * bounds.height) / 3))
+        secondRowPath.addLine(to: CGPoint(x: bounds.width, y: (2 * bounds.height) / 3))
         let secondRowLayer = createGridLayer()
         secondRowLayer.path = secondRowPath.cgPath
         layer.addSublayer(secondRowLayer)
     }
 }
-private extension CameraGridView {
-    func clearOldLayersBeforeDraw() {
+
+extension CameraGridView {
+    private func clearOldLayersBeforeDraw() {
         layer.sublayers?.removeAll()
         layer.backgroundColor = .none
     }
-    func createGridLayer() -> CAShapeLayer {
+
+    private func createGridLayer() -> CAShapeLayer {
         let shapeLayer = CAShapeLayer()
         shapeLayer.strokeColor = UIColor(white: 1.0, alpha: 0.2).cgColor
         shapeLayer.frame = bounds

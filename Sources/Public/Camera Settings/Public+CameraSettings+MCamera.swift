@@ -8,32 +8,20 @@
 //
 //  Copyright ©2024 Mijick. All rights reserved.
 
-
-import SwiftUI
 import AVKit
-
-// MARK: Initializer
-public extension MCamera {
-    init() { self.init(manager: .init(
-        captureSession: AVCaptureSession(),
-        captureDeviceInputType: AVCaptureDeviceInput.self
-    ))}
-}
-
+import SwiftUI
 
 // MARK: - METHODS
 
-
-
 // MARK: Changing Default Screens
-public extension MCamera {
+
+extension MCamera {
     /**
      Changes the camera screen to a selected one.
 
      For more details and tips on creating your own **Camera Screen**, see the ``MCameraScreen`` documentation.
 
      - tip: To hide selected buttons and controls on the screen, use the method with DefaultCameraScreen as argument. For a code example, please refer to Usage -> Default Camera Screen Customization section.
-
 
      # Usage
 
@@ -68,7 +56,9 @@ public extension MCamera {
      }
      ```
      */
-    func setCameraScreen(_ builder: @escaping CameraScreenBuilder) -> Self { config.cameraScreen = builder; return self }
+    public func setCameraScreen(_ builder: @escaping CameraScreenBuilder) -> Self { config.cameraScreen = builder
+        return self
+    }
 
     /**
      Changes the captured media screen to a selected one.
@@ -76,7 +66,6 @@ public extension MCamera {
      For more details and tips on creating your own **Captured Media Screen**, see the ``MCapturedMediaScreen`` documentation.
 
      - tip: To disable displaying captured media, call the method with a nil value.
-
 
      # Usage
 
@@ -106,13 +95,15 @@ public extension MCamera {
      }
      ```
      */
-    func setCapturedMediaScreen(_ builder: CapturedMediaScreenBuilder?) -> Self { config.capturedMediaScreen = builder; return self }
+    public func setCapturedMediaScreen(_ builder: CapturedMediaScreenBuilder?) -> Self { config
+        .capturedMediaScreen = builder
+        return self
+    }
 
     /**
      Changes the error screen to a selected one.
 
      For more details and tips on creating your own **Error Screen**, see the ``MCameraErrorScreen`` documentation.
-
 
      ## Usage
      ```swift
@@ -127,17 +118,23 @@ public extension MCamera {
      }
      ```
      */
-    func setErrorScreen(_ builder: @escaping ErrorScreenBuilder) -> Self { config.errorScreen = builder; return self }
+    public func setErrorScreen(_ builder: @escaping ErrorScreenBuilder) -> Self { config.errorScreen = builder
+        return self
+    }
 }
 
 // MARK: Changing Initial Values
-public extension MCamera {
+
+extension MCamera {
     /**
      Changes the initial camera output type.
 
      For available options, please refer to the ``CameraOutputType`` documentation.
      */
-    func setCameraOutputType(_ cameraOutputType: CameraOutputType) -> Self { manager.attributes.outputType = cameraOutputType; return self }
+    public func setCameraOutputType(_ cameraOutputType: CameraOutputType) -> Self { manager.attributes
+        .outputType = cameraOutputType
+        return self
+    }
 
     /**
      Changes the initial camera position.
@@ -146,21 +143,29 @@ public extension MCamera {
 
      - note: If the selected camera position is not available, the camera will not be changed.
      */
-    func setCameraPosition(_ cameraPosition: CameraPosition) -> Self { manager.attributes.cameraPosition = cameraPosition; return self }
+    public func setCameraPosition(_ cameraPosition: CameraPosition) -> Self { manager.attributes
+        .cameraPosition = cameraPosition
+        return self
+    }
 
     /**
      Definies whether the audio source is available.
 
      If disabled, the camera will not record audio, and will not ask for permission to access the microphone.
      */
-    func setAudioAvailability(_ isAvailable: Bool) -> Self { manager.attributes.isAudioSourceAvailable = isAvailable; return self }
+    public func setAudioAvailability(_ isAvailable: Bool) -> Self { manager.attributes
+        .isAudioSourceAvailable = isAvailable
+        return self
+    }
 
     /**
      Changes the initial camera zoom level.
 
      - note: If the zoom factor is out of bounds, it will be set to the closest available value.
      */
-    func setZoomFactor(_ zoomFactor: CGFloat) -> Self { manager.attributes.zoomFactor = zoomFactor; return self }
+    public func setZoomFactor(_ zoomFactor: CGFloat) -> Self { manager.attributes.zoomFactor = zoomFactor
+        return self
+    }
 
     /**
      Changes the initial camera flash mode.
@@ -169,7 +174,9 @@ public extension MCamera {
 
      - note: If the selected flash mode is not available, the flash mode will not be changed.
      */
-    func setFlashMode(_ flashMode: CameraFlashMode) -> Self { manager.attributes.flashMode = flashMode; return self }
+    public func setFlashMode(_ flashMode: CameraFlashMode) -> Self { manager.attributes.flashMode = flashMode
+        return self
+    }
 
     /**
      Changes the initial light (torch / flashlight) mode.
@@ -178,14 +185,19 @@ public extension MCamera {
 
      - note: If the selected light mode is not available, the light mode will not be changed.
      */
-    func setLightMode(_ lightMode: CameraLightMode) -> Self { manager.attributes.lightMode = lightMode; return self }
+    public func setLightMode(_ lightMode: CameraLightMode) -> Self { manager.attributes.lightMode = lightMode
+        return self
+    }
 
     /**
      Changes the initial camera resolution.
 
      - important: Changing the resolution may affect the maximum frame rate that can be set.
      */
-    func setResolution(_ resolution: AVCaptureSession.Preset) -> Self { manager.attributes.resolution = resolution; return self }
+    public func setResolution(_ resolution: AVCaptureSession.Preset) -> Self { manager.attributes
+        .resolution = resolution
+        return self
+    }
 
     /**
      Changes the initial camera frame rate.
@@ -193,78 +205,106 @@ public extension MCamera {
      - note: Depending on the resolution of the camera and the current specifications of the device, there are some restrictions on the frame rate that can be set.
      If you set a frame rate that exceeds the camera's capabilities, the library will automatically set the closest possible value and show you which value has been set (``MCameraScreen/frameRate``).
      */
-    func setFrameRate(_ frameRate: Int32) -> Self { manager.attributes.frameRate = frameRate; return self }
+    public func setFrameRate(_ frameRate: Int32) -> Self { manager.attributes.frameRate = frameRate
+        return self
+    }
 
     /**
      Changes the initial camera exposure duration.
 
      - note: If the exposure duration is out of bounds, it will be set to the closest available value.
      */
-    func setCameraExposureDuration(_ duration: CMTime) -> Self { manager.attributes.cameraExposure.duration = duration; return self }
+    public func setCameraExposureDuration(_ duration: CMTime) -> Self { manager.attributes.cameraExposure
+        .duration = duration
+        return self
+    }
 
     /**
      Changes the initial camera target bias.
 
      - note: If the target bias is out of bounds, it will be set to the closest available value.
      */
-    func setCameraTargetBias(_ targetBias: Float) -> Self { manager.attributes.cameraExposure.targetBias = targetBias; return self }
+    public func setCameraTargetBias(_ targetBias: Float) -> Self { manager.attributes.cameraExposure
+        .targetBias = targetBias
+        return self
+    }
 
     /**
      Changes the initial camera ISO.
 
      - note: If the ISO is out of bounds, it will be set to the closest available value.
      */
-    func setCameraISO(_ iso: Float) -> Self { manager.attributes.cameraExposure.iso = iso; return self }
+    public func setCameraISO(_ iso: Float) -> Self { manager.attributes.cameraExposure.iso = iso
+        return self
+    }
 
     /**
      Changes the initial camera exposure mode.
 
      - note: If the exposure mode is not supported, the exposure mode will not be changed.
      */
-    func setCameraExposureMode(_ exposureMode: AVCaptureDevice.ExposureMode) -> Self { manager.attributes.cameraExposure.mode = exposureMode; return self }
+    public func setCameraExposureMode(_ exposureMode: AVCaptureDevice.ExposureMode) -> Self { manager.attributes
+        .cameraExposure.mode = exposureMode
+        return self
+    }
 
     /**
      Changes the initial camera HDR mode.
 
      For available options, please refer to the ``CameraHDRMode`` documentation.
      */
-    func setCameraHDRMode(_ hdrMode: CameraHDRMode) -> Self { manager.attributes.hdrMode = hdrMode; return self }
+    public func setCameraHDRMode(_ hdrMode: CameraHDRMode) -> Self { manager.attributes.hdrMode = hdrMode
+        return self
+    }
 
     /**
      Changes the initial camera filters.
 
      - important: Setting multiple filters simultaneously can affect the performance of the camera.
      */
-    func setCameraFilters(_ filters: [CIFilter]) -> Self { manager.attributes.cameraFilters = filters; return self }
+    public func setCameraFilters(_ filters: [CIFilter]) -> Self { manager.attributes.cameraFilters = filters
+        return self
+    }
 
     /**
      Changes the initial mirror output setting.
      */
-    func setMirrorOutput(_ shouldMirror: Bool) -> Self { manager.attributes.mirrorOutput = shouldMirror; return self }
+    public func setMirrorOutput(_ shouldMirror: Bool) -> Self { manager.attributes.mirrorOutput = shouldMirror
+        return self
+    }
 
     /**
      Changes the initial grid visibility setting.
      */
-    func setGridVisibility(_ shouldShowGrid: Bool) -> Self { manager.attributes.isGridVisible = shouldShowGrid; return self }
+    public func setGridVisibility(_ shouldShowGrid: Bool) -> Self { manager.attributes.isGridVisible = shouldShowGrid
+        return self
+    }
 
     /**
      Changes the shape of the focus indicator visible when touching anywhere on the camera screen.
      */
-    func setFocusImage(_ image: UIImage) -> Self { manager.cameraMetalView.focusIndicator.image = image; return self }
+    public func setFocusImage(_ image: UIImage) -> Self { manager.cameraMetalView.focusIndicator.image = image
+        return self
+    }
 
     /**
      Changes the color of the focus indicator visible when touching anywhere on the camera screen.
      */
-    func setFocusImageColor(_ color: UIColor) -> Self { manager.cameraMetalView.focusIndicator.tintColor = color; return self }
+    public func setFocusImageColor(_ color: UIColor) -> Self { manager.cameraMetalView.focusIndicator.tintColor = color
+        return self
+    }
 
     /**
      Changes the size of the focus indicator visible when touching anywhere on the camera.
      */
-    func setFocusImageSize(_ size: CGFloat) -> Self { manager.cameraMetalView.focusIndicator.size = size; return self }
+    public func setFocusImageSize(_ size: CGFloat) -> Self { manager.cameraMetalView.focusIndicator.size = size
+        return self
+    }
 }
 
 // MARK: Actions
-public extension MCamera {
+
+extension MCamera {
     /**
      Indicates how the MCamera can be closed.
 
@@ -272,7 +312,6 @@ public extension MCamera {
      ```swift
      struct ContentView: View {
         @State private var isSheetPresented: Bool = false
-
 
         var body: some View {
             Button(action: { isSheetPresented = true }) {
@@ -290,7 +329,9 @@ public extension MCamera {
      }
      ```
      */
-    func setCloseMCameraAction(_ action: @escaping () -> ()) -> Self { config.closeMCameraAction = action; return self }
+    public func setCloseMCameraAction(_ action: @escaping () -> Void) -> Self { config.closeMCameraAction = action
+        return self
+    }
 
     /**
      Defines action that is called when an image is captured.
@@ -299,7 +340,6 @@ public extension MCamera {
      See ``Controller`` for more information.
 
      - note: The action is called immediately if **Captured Media Screen** is nil, otherwise after the user accepts the photo.
-
 
      ## Usage
      ```swift
@@ -317,7 +357,10 @@ public extension MCamera {
      }
      ```
      */
-    func onImageCaptured(_ action: @escaping (UIImage, MCamera.Controller) -> ()) -> Self { config.imageCapturedAction = action; return self }
+    public func onImageCaptured(_ action: @escaping (UIImage, MCamera.Controller) -> Void) -> Self { config
+        .imageCapturedAction = action
+        return self
+    }
 
     /**
      Defines action that is called when a video is captured.
@@ -326,7 +369,6 @@ public extension MCamera {
      See ``Controller`` for more information.
 
      - note: The action is called immediately if **Captured Media Screen** is nil, otherwise after the user accepts the video.
-
 
      ## Usage
      ```swift
@@ -344,11 +386,15 @@ public extension MCamera {
      }
      ```
      */
-    func onVideoCaptured(_ action: @escaping (URL, MCamera.Controller) -> ()) -> Self { config.videoCapturedAction = action; return self }
+    public func onVideoCaptured(_ action: @escaping (URL, MCamera.Controller) -> Void) -> Self { config
+        .videoCapturedAction = action
+        return self
+    }
 }
 
 // MARK: Others
-public extension MCamera {
+
+extension MCamera {
     /**
      Locks the screen in portrait mode when the Camera Screen is active.
 
@@ -384,12 +430,48 @@ public extension MCamera {
      }
      ```
      */
-    func lockCameraInPortraitOrientation(_ appDelegate: MApplicationDelegate.Type) -> Self { config.appDelegate = appDelegate; manager.attributes.orientationLocked = true; return self }
+    public func lockCameraInPortraitOrientation(_ appDelegate: MApplicationDelegate.Type) -> Self { config
+        .appDelegate = appDelegate
+        manager.attributes.orientationLocked = true
+        return self
+    }
 
     /**
      Starts the camera session.
 
      - important: This method must be called to start the camera.
      */
-    func startSession() -> some View { config.isCameraConfigured = true; return self }
+    public func startSession() -> some View { config.isCameraConfigured = true
+        return self
+    }
+
+    /**
+     Binds the camera session lifecycle to an external isActive state.
+
+     When isActive changes to false, the camera session is paused.
+     When isActive changes to true, the camera session is resumed.
+
+     Use this to control the camera session when presenting overlays like fullScreenCover or sheet.
+
+     # Usage
+     ```swift
+     @State private var isCameraActive = true
+
+     var body: some View {
+         MCamera()
+             .setIsActive($isCameraActive)
+             .startSession()
+             .fullScreenCover(isPresented: $showOverlay) {
+                 // overlay content
+             }
+             .onChange(of: showOverlay) { _, isPresented in
+                 isCameraActive = !isPresented
+             }
+     }
+     ```
+     */
+    public func setIsActive(_ isActive: Binding<Bool>) -> Self {
+        config.isActiveBinding = isActive
+        return self
+    }
 }

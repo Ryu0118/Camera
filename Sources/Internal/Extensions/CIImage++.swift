@@ -8,16 +8,16 @@
 //
 //  Copyright ©2024 Mijick. All rights reserved.
 
-
 import SwiftUI
 
 // MARK: Applying Filters
+
 extension CIImage {
     func applyingFilters(_ filters: [CIFilter]) -> CIImage {
         var ciImage = self
-        filters.forEach {
-            $0.setValue(ciImage, forKey: kCIInputImageKey)
-            ciImage = $0.outputImage ?? ciImage
+        for filter in filters {
+            filter.setValue(ciImage, forKey: kCIInputImageKey)
+            ciImage = filter.outputImage ?? ciImage
         }
         return ciImage
     }

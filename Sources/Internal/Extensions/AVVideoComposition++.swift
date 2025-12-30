@@ -8,13 +8,19 @@
 //
 //  Copyright ©2024 Mijick. All rights reserved.
 
-
 import AVKit
 
 // MARK: Apply Filters
+
 extension AVVideoComposition {
-    static func applyFilters(to asset: AVAsset, applyFiltersAction: @Sendable @escaping (AVAsynchronousCIImageFilteringRequest) -> ()) async throws -> AVVideoComposition {
-        if #available(iOS 16.0, *) { return try await AVVideoComposition.videoComposition(with: asset, applyingCIFiltersWithHandler: applyFiltersAction) }
+    static func applyFilters(
+        to asset: AVAsset,
+        applyFiltersAction: @Sendable @escaping (AVAsynchronousCIImageFilteringRequest) -> Void
+    ) async throws -> AVVideoComposition {
+        if #available(iOS 16.0, *) { return try await AVVideoComposition.videoComposition(
+            with: asset,
+            applyingCIFiltersWithHandler: applyFiltersAction
+        ) }
         return AVVideoComposition(asset: asset, applyingCIFiltersWithHandler: applyFiltersAction)
     }
 }

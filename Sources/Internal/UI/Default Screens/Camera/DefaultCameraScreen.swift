@@ -8,15 +8,13 @@
 //
 //  Copyright ©2024 Mijick. All rights reserved.
 
-
 import SwiftUI
 
 public struct DefaultCameraScreen: MCameraScreen {
     @ObservedObject public var cameraManager: CameraManager
     public let namespace: Namespace.ID
-    public let closeMCameraAction: () -> ()
+    public let closeMCameraAction: () -> Void
     var config: Config = .init()
-
 
     public var body: some View {
         ZStack {
@@ -31,16 +29,19 @@ public struct DefaultCameraScreen: MCameraScreen {
         .animation(.mSpring)
     }
 }
-private extension DefaultCameraScreen {
-    func createTopBar() -> some View {
+
+extension DefaultCameraScreen {
+    private func createTopBar() -> some View {
         DefaultCameraScreen.TopBar(parent: self)
             .frame(maxHeight: .infinity, alignment: .top)
     }
-    func createContentView() -> some View {
+
+    private func createContentView() -> some View {
         createCameraOutputView()
             .ignoresSafeArea()
     }
-    func createBottomBar() -> some View {
+
+    private func createBottomBar() -> some View {
         DefaultCameraScreen.BottomBar(parent: self)
             .frame(maxHeight: .infinity, alignment: .bottom)
     }
@@ -48,7 +49,7 @@ private extension DefaultCameraScreen {
 
 extension DefaultCameraScreen {
     var iconAngle: Angle { switch isOrientationLocked {
-        case true: deviceOrientation.getAngle()
-        case false: .zero
+    case true: deviceOrientation.getAngle()
+    case false: .zero
     }}
 }

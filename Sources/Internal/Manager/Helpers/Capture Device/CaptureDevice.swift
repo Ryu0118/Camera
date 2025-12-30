@@ -8,11 +8,11 @@
 //
 //  Copyright ©2024 Mijick. All rights reserved.
 
-
 import AVKit
 
 protocol CaptureDevice: NSObject {
     // MARK: Getters
+
     var uniqueID: String { get }
     var exposureDuration: CMTime { get }
     var exposureTargetBias: Float { get }
@@ -33,6 +33,7 @@ protocol CaptureDevice: NSObject {
     var isFocusPointOfInterestSupported: Bool { get }
 
     // MARK: Getters & Setters
+
     var videoZoomFactor: CGFloat { get set }
     var focusMode: AVCaptureDevice.FocusMode { get set }
     var focusPointOfInterest: CGPoint { get set }
@@ -44,19 +45,18 @@ protocol CaptureDevice: NSObject {
     var hdrMode: CameraHDRMode { get set }
 
     // MARK: Methods
+
     func lockForConfiguration() throws
     func unlockForConfiguration()
     func isExposureModeSupported(_ exposureMode: AVCaptureDevice.ExposureMode) -> Bool
     func setExposureModeCustom(duration: CMTime, iso: Float, completionHandler: (@Sendable (CMTime) -> Void)?)
-    func setExposureTargetBias(_ bias: Float, completionHandler handler: (@Sendable (CMTime) -> ())?)
+    func setExposureTargetBias(_ bias: Float, completionHandler handler: (@Sendable (CMTime) -> Void)?)
 }
-
 
 // MARK: - METHODS
 
-
-
 // MARK: Set Zoom Factor
+
 extension CaptureDevice {
     func setZoomFactor(_ factor: CGFloat) {
         let factor = max(min(factor, min(maxAvailableVideoZoomFactor, 5)), minAvailableVideoZoomFactor)
@@ -65,6 +65,7 @@ extension CaptureDevice {
 }
 
 // MARK: Set Focus Point Of Interest
+
 extension CaptureDevice {
     func setFocusPointOfInterest(_ point: CGPoint) {
         guard isFocusPointOfInterestSupported else { return }
@@ -75,6 +76,7 @@ extension CaptureDevice {
 }
 
 // MARK: Set Exposure Point Of Interest
+
 extension CaptureDevice {
     func setExposurePointOfInterest(_ point: CGPoint) {
         guard isExposurePointOfInterestSupported else { return }
@@ -85,6 +87,7 @@ extension CaptureDevice {
 }
 
 // MARK: Set Light Mode
+
 extension CaptureDevice {
     func setLightMode(_ mode: CameraLightMode) {
         guard hasTorch else { return }
@@ -93,6 +96,7 @@ extension CaptureDevice {
 }
 
 // MARK: Set Frame Rate
+
 extension CaptureDevice {
     func setFrameRate(_ frameRate: Int32) {
         guard let minFrameRate, let maxFrameRate else { return }
@@ -105,6 +109,7 @@ extension CaptureDevice {
 }
 
 // MARK: Set Exposure Mode
+
 extension CaptureDevice {
     func setExposureMode(_ mode: AVCaptureDevice.ExposureMode, duration: CMTime, iso: Float) {
         guard isExposureModeSupported(mode) else { return }
@@ -121,6 +126,7 @@ extension CaptureDevice {
 }
 
 // MARK: Set Exposure Target Bias
+
 extension CaptureDevice {
     func setExposureTargetBias(_ bias: Float) {
         guard isExposureModeSupported(.custom) else { return }

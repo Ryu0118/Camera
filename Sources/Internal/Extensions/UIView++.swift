@@ -8,10 +8,10 @@
 //
 //  Copyright ©2024 Mijick. All rights reserved.
 
-
 import SwiftUI
 
 // MARK: Add to Parent
+
 extension UIView {
     func addToParent(_ view: UIView) {
         view.addSubview(self)
@@ -25,6 +25,7 @@ extension UIView {
 }
 
 // MARK: Apply Blur Effect
+
 extension UIView {
     func applyBlurEffect(style: UIBlurEffect.Style) {
         let blurEffectView = UIVisualEffectView()
@@ -37,6 +38,7 @@ extension UIView {
 }
 
 // MARK: Tags
+
 extension Int {
     static var blurViewTag: Int { 2137 }
     static var focusIndicatorTag: Int { 29 }

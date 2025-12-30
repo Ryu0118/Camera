@@ -8,18 +8,18 @@
 //
 //  Copyright ©2024 Mijick. All rights reserved.
 
-
 import SwiftUI
 
 // MARK: Getters
-public extension MCameraMedia {
+
+extension MCameraMedia {
     /**
      Gets the image from the media object.
      */
-    func getImage() -> UIImage? { image }
+    public func getImage() -> UIImage? { image }
 
     /**
      Gets the video URL from the media object.
      */
-    func getVideo() -> URL? { video }
+    public func getVideo() -> URL? { video }
 }

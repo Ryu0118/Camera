@@ -8,18 +8,16 @@
 //
 //  Copyright ©2024 Mijick. All rights reserved.
 
-
-import SwiftUI
 import AVKit
+import SwiftUI
 
 struct DefaultCapturedMediaScreen: MCapturedMediaScreen {
     let capturedMedia: MCameraMedia
     let namespace: Namespace.ID
-    let retakeAction: () -> ()
-    let acceptMediaAction: () -> ()
+    let retakeAction: () -> Void
+    let acceptMediaAction: () -> Void
     @State private var player: AVPlayer = .init()
     @State private var isInitialized: Bool = false
-
 
     var body: some View {
         ZStack {
@@ -32,12 +30,14 @@ struct DefaultCapturedMediaScreen: MCapturedMediaScreen {
         .onAppear { isInitialized = true }
     }
 }
-private extension DefaultCapturedMediaScreen {
-    @ViewBuilder func createContentView() -> some View { if isInitialized {
+
+extension DefaultCapturedMediaScreen {
+    @ViewBuilder
+    private func createContentView() -> some View { if isInitialized {
         if let image = capturedMedia.getImage() { createImageView(image) }
         else if let video = capturedMedia.getVideo() { createVideoView(video) }
     }}
-    func createButtons() -> some View {
+    private func createButtons() -> some View {
         HStack(spacing: 32) {
             createRetakeButton()
             createSaveButton()
@@ -48,19 +48,23 @@ private extension DefaultCapturedMediaScreen {
         .padding(.bottom, 8)
     }
 }
-private extension DefaultCapturedMediaScreen {
-    func createImageView(_ image: UIImage) -> some View {
+
+extension DefaultCapturedMediaScreen {
+    private func createImageView(_ image: UIImage) -> some View {
         Image(uiImage: image)
             .resizable()
             .aspectRatio(contentMode: .fit)
             .ignoresSafeArea()
             .transition(.scale(scale: 1.1))
     }
-    func createVideoView(_ video: URL) -> some View {
+
+    private func createVideoView(_ video: URL) -> some View {
         VideoPlayer(player: player)
             .onAppear { onVideoAppear(video) }
     }
-    @ViewBuilder func createRetakeButton() -> some View { if isInitialized {
+
+    @ViewBuilder
+    private func createRetakeButton() -> some View { if isInitialized {
         BottomButton(
             icon: .mijickIconCancel,
             iconColor: .init(.mijickBackgroundInverted),
@@ -70,7 +74,8 @@ private extension DefaultCapturedMediaScreen {
         )
         .transition(.scale)
     }}
-    @ViewBuilder func createSaveButton() -> some View { if isInitialized {
+    @ViewBuilder
+    private func createSaveButton() -> some View { if isInitialized {
         BottomButton(
             icon: .mijickIconCheck,
             iconColor: .init(.mijickBackgroundPrimary),
@@ -82,8 +87,8 @@ private extension DefaultCapturedMediaScreen {
     }}
 }
 
-private extension DefaultCapturedMediaScreen {
-    func onVideoAppear(_ url: URL) {
+extension DefaultCapturedMediaScreen {
+    private func onVideoAppear(_ url: URL) {
         player = .init(url: url)
         player.play()
     }

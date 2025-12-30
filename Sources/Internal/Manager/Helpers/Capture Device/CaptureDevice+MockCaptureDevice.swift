@@ -8,11 +8,11 @@
 //
 //  Copyright ©2024 Mijick. All rights reserved.
 
-
 import AVKit
 
 class MockCaptureDevice: NSObject, CaptureDevice {
     // MARK: Getters
+
     var uniqueID: String = UUID().uuidString
     var exposureDuration: CMTime { _exposureDuration }
     var exposureTargetBias: Float { _exposureTargetBias }
@@ -33,6 +33,7 @@ class MockCaptureDevice: NSObject, CaptureDevice {
     var isFocusPointOfInterestSupported: Bool { true }
 
     // MARK: Setters
+
     var videoZoomFactor: CGFloat = 1
     var focusMode: AVCaptureDevice.FocusMode = .autoFocus
     var focusPointOfInterest: CGPoint = .zero
@@ -44,18 +45,21 @@ class MockCaptureDevice: NSObject, CaptureDevice {
     var hdrMode: CameraHDRMode = .auto
 
     // MARK: Methods
-    func lockForConfiguration() throws { return }
-    func unlockForConfiguration() { return }
+
+    func lockForConfiguration() throws {}
+    func unlockForConfiguration() {}
     func isExposureModeSupported(_ exposureMode: AVCaptureDevice.ExposureMode) -> Bool { true }
     func setExposureModeCustom(duration: CMTime, iso: Float, completionHandler: ((CMTime) -> Void)?) {
         _exposureDuration = duration
         _iso = iso
     }
-    func setExposureTargetBias(_ bias: Float, completionHandler handler: ((CMTime) -> ())?) {
+
+    func setExposureTargetBias(_ bias: Float, completionHandler handler: ((CMTime) -> Void)?) {
         _exposureTargetBias = bias
     }
 
     // MARK: Private Attributes
+
     private var _exposureDuration: CMTime = .init()
     private var _exposureTargetBias: Float = 0
     private var _iso: Float = 0

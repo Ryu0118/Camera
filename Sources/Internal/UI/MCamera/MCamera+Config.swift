@@ -8,21 +8,29 @@
 //
 //  Copyright ©2024 Mijick. All rights reserved.
 
-
 import SwiftUI
 
-extension MCamera { @MainActor class Config {
-    // MARK: Screens
-    var cameraScreen: CameraScreenBuilder = DefaultCameraScreen.init
-    var capturedMediaScreen: CapturedMediaScreenBuilder? = DefaultCapturedMediaScreen.init
-    var errorScreen: ErrorScreenBuilder = DefaultCameraErrorScreen.init
+extension MCamera { @MainActor
+    class Config {
+        // MARK: Screens
 
-    // MARK: Actions
-    var imageCapturedAction: (UIImage, MCamera.Controller) -> () = { _,_ in }
-    var videoCapturedAction: (URL, MCamera.Controller) -> () = { _,_ in }
-    var closeMCameraAction: () -> () = {}
+        var cameraScreen: CameraScreenBuilder = DefaultCameraScreen.init
+        var capturedMediaScreen: CapturedMediaScreenBuilder? = DefaultCapturedMediaScreen.init
+        var errorScreen: ErrorScreenBuilder = DefaultCameraErrorScreen.init
 
-    // MARK: Others
-    var appDelegate: MApplicationDelegate.Type? = nil
-    var isCameraConfigured: Bool = false
-}}
+        // MARK: Actions
+
+        var imageCapturedAction: (UIImage, MCamera.Controller) -> Void = { _, _ in }
+        var videoCapturedAction: (URL, MCamera.Controller) -> Void = { _, _ in }
+        var closeMCameraAction: () -> Void = {}
+
+        // MARK: Others
+
+        var appDelegate: MApplicationDelegate.Type?
+        var isCameraConfigured: Bool = false
+
+        // MARK: Session Control
+
+        var isActiveBinding: Binding<Bool>?
+    }
+}

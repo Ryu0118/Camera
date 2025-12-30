@@ -8,21 +8,19 @@
 //
 //  Copyright ©2024 Mijick. All rights reserved.
 
-
 import SwiftUI
 
 extension DefaultCameraScreen { struct TopButton: View {
     let icon: ImageResource
     let iconRotationAngle: Angle
-    let action: () -> ()
-
+    let action: () -> Void
 
     var body: some View {
         Button(action: action, label: createButtonLabel)
     }
 }}
-private extension DefaultCameraScreen.TopButton {
-    func createButtonLabel() -> some View {
+extension DefaultCameraScreen.TopButton {
+    fileprivate func createButtonLabel() -> some View {
         Image(icon)
             .resizable()
             .frame(width: 16, height: 16)

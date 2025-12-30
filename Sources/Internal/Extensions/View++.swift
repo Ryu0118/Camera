@@ -8,10 +8,10 @@
 //
 //  Copyright ©2024 Mijick. All rights reserved.
 
-
 import SwiftUI
 
 // MARK: Erased
+
 extension View {
     func erased() -> AnyView { .init(self) }
 }

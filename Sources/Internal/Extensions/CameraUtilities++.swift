@@ -8,14 +8,14 @@
 //
 //  Copyright ©2024 Mijick. All rights reserved.
 
-
 import AVKit
 
 // MARK: To Device Flash Mode
+
 extension CameraFlashMode {
     func toDeviceFlashMode() -> AVCaptureDevice.FlashMode { switch self {
-        case .off: .off
-        case .on: .on
-        case .auto: .auto
+    case .off: .off
+    case .on: .on
+    case .auto: .auto
     }}
 }

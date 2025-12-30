@@ -8,12 +8,10 @@
 //
 //  Copyright ©2024 Mijick. All rights reserved.
 
-
 import SwiftUI
 
 extension DefaultCameraScreen { struct BottomBar: View {
     let parent: DefaultCameraScreen
-
 
     var body: some View {
         ZStack(alignment: .top) {
@@ -25,12 +23,13 @@ extension DefaultCameraScreen { struct BottomBar: View {
         .padding(.horizontal, 32)
     }
 }}
-private extension DefaultCameraScreen.BottomBar {
-    @ViewBuilder func createOutputTypeSwitch() -> some View { if isOutputTypeSwitchActive {
+extension DefaultCameraScreen.BottomBar {
+    @ViewBuilder
+    fileprivate func createOutputTypeSwitch() -> some View { if isOutputTypeSwitchActive {
         DefaultCameraScreen.CameraOutputSwitch(parent: parent)
             .offset(y: -80)
     }}
-    func createButtons() -> some View {
+    fileprivate func createButtons() -> some View {
         ZStack {
             createLightButton()
             createCaptureButton()
@@ -38,8 +37,10 @@ private extension DefaultCameraScreen.BottomBar {
         }.frame(height: 72)
     }
 }
-private extension DefaultCameraScreen.BottomBar {
-    @ViewBuilder func createLightButton() -> some View { if isLightButtonActive {
+
+extension DefaultCameraScreen.BottomBar {
+    @ViewBuilder
+    fileprivate func createLightButton() -> some View { if isLightButtonActive {
         BottomButton(
             icon: .mijickIconLight,
             iconColor: lightButtonIconColor,
@@ -50,7 +51,8 @@ private extension DefaultCameraScreen.BottomBar {
         .frame(maxWidth: .infinity, alignment: .leading)
         .transition(.scale)
     }}
-    @ViewBuilder func createCaptureButton() -> some View { if isCaptureButtonActive {
+    @ViewBuilder
+    fileprivate func createCaptureButton() -> some View { if isCaptureButtonActive {
         DefaultCameraScreen.CaptureButton(
             outputType: parent.cameraOutputType,
             isRecording: parent.isRecording,
@@ -58,7 +60,10 @@ private extension DefaultCameraScreen.BottomBar {
         )
         .transition(.scale)
     }}
-    @ViewBuilder func createChangeCameraPositionButton() -> some View { if isChangeCameraPositionButtonActive {
+    @ViewBuilder
+    fileprivate func createChangeCameraPositionButton()
+        -> some View
+    { if isChangeCameraPositionButtonActive {
         BottomButton(
             icon: .mijickIconChangeCamera,
             iconColor: changeCameraPositionButtonIconColor,
@@ -71,27 +76,42 @@ private extension DefaultCameraScreen.BottomBar {
     }}
 }
 
-private extension DefaultCameraScreen.BottomBar {
-    func changeLightMode() {
+extension DefaultCameraScreen.BottomBar {
+    fileprivate func changeLightMode() {
         do { try parent.setLightMode(parent.lightMode.next()) }
         catch {}
     }
-    func changeCameraPosition() { Task {
+
+    fileprivate func changeCameraPosition() { Task {
         do { try await parent.setCameraPosition(parent.cameraPosition.next()) }
         catch {}
     }}
 }
 
-private extension DefaultCameraScreen.BottomBar {
-    var lightButtonIconColor: Color { switch parent.lightMode {
-        case .on: .init(.mijickBackgroundYellow)
-        case .off: .init(.mijickBackgroundInverted)
+extension DefaultCameraScreen.BottomBar {
+    fileprivate var lightButtonIconColor: Color { switch parent.lightMode {
+    case .on: .init(.mijickBackgroundYellow)
+    case .off: .init(.mijickBackgroundInverted)
     }}
-    var changeCameraPositionButtonIconColor: Color { .init(.mijickBackgroundInverted) }
+    fileprivate var changeCameraPositionButtonIconColor: Color { .init(.mijickBackgroundInverted) }
 }
-private extension DefaultCameraScreen.BottomBar {
-    var isOutputTypeSwitchActive: Bool { parent.config.cameraOutputSwitchAllowed && parent.cameraManager.captureSession.isRunning && !parent.isRecording }
-    var isLightButtonActive: Bool { parent.config.lightButtonAllowed && parent.hasLight && parent.cameraManager.captureSession.isRunning && !parent.isRecording }
-    var isCaptureButtonActive: Bool { parent.config.captureButtonAllowed && parent.cameraManager.captureSession.isRunning }
-    var isChangeCameraPositionButtonActive: Bool { parent.config.cameraPositionButtonAllowed && parent.cameraManager.captureSession.isRunning && !parent.isRecording }
+
+extension DefaultCameraScreen.BottomBar {
+    fileprivate var isOutputTypeSwitchActive: Bool {
+        parent.config.cameraOutputSwitchAllowed && parent.cameraManager.captureSession.isRunning && !parent.isRecording
+    }
+
+    fileprivate var isLightButtonActive: Bool {
+        parent.config.lightButtonAllowed && parent.hasLight && parent.cameraManager.captureSession.isRunning && !parent
+            .isRecording
+    }
+
+    fileprivate var isCaptureButtonActive: Bool {
+        parent.config.captureButtonAllowed && parent.cameraManager.captureSession.isRunning
+    }
+
+    fileprivate var isChangeCameraPositionButtonActive: Bool {
+        parent.config.cameraPositionButtonAllowed && parent.cameraManager.captureSession.isRunning && !parent
+            .isRecording
+    }
 }

@@ -8,39 +8,44 @@
 //
 //  Copyright ©2024 Mijick. All rights reserved.
 
-
 import AVKit
 
-@MainActor class CameraManagerPermissionsManager {}
+@MainActor
+class CameraManagerPermissionsManager {}
 
 // MARK: Request Access
+
 extension CameraManagerPermissionsManager {
     func requestAccess(parent: CameraManager) async throws(MCameraError) {
         do {
             try await getAuthorizationStatus(for: .video)
             if parent.attributes.isAudioSourceAvailable { try await getAuthorizationStatus(for: .audio) }
-        }
-        catch {
+        } catch {
             parent.attributes.error = error
             throw error
         }
     }
 }
-private extension CameraManagerPermissionsManager {
-    func getAuthorizationStatus(for mediaType: AVMediaType) async throws(MCameraError) { switch AVCaptureDevice.authorizationStatus(for: mediaType) {
+
+extension CameraManagerPermissionsManager {
+    private func getAuthorizationStatus(for mediaType: AVMediaType) async throws(MCameraError) {
+        switch AVCaptureDevice.authorizationStatus(for: mediaType) {
         case .denied, .restricted: throw getPermissionsError(mediaType)
         case .notDetermined: try await requestAccess(for: mediaType)
         default: return
-    }}
+        }
+    }
 }
-private extension CameraManagerPermissionsManager {
-    func requestAccess(for mediaType: AVMediaType) async throws(MCameraError) {
+
+extension CameraManagerPermissionsManager {
+    private func requestAccess(for mediaType: AVMediaType) async throws(MCameraError) {
         let isGranted = await AVCaptureDevice.requestAccess(for: mediaType)
         if !isGranted { throw getPermissionsError(mediaType) }
     }
-    func getPermissionsError(_ mediaType: AVMediaType) -> MCameraError { switch mediaType {
-        case .audio: .microphonePermissionsNotGranted
-        case .video: .cameraPermissionsNotGranted
-        default: fatalError()
+
+    private func getPermissionsError(_ mediaType: AVMediaType) -> MCameraError { switch mediaType {
+    case .audio: .microphonePermissionsNotGranted
+    case .video: .cameraPermissionsNotGranted
+    default: fatalError()
     }}
 }

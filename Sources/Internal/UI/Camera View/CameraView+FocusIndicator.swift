@@ -8,16 +8,17 @@
 //
 //  Copyright ©2024 Mijick. All rights reserved.
 
-
 import SwiftUI
 
-@MainActor class CameraFocusIndicatorView {
+@MainActor
+class CameraFocusIndicatorView {
     var image: UIImage = .init(resource: .mijickIconCrosshair)
     var tintColor: UIColor = .init(resource: .mijickBackgroundYellow)
     var size: CGFloat = 96
 }
 
 // MARK: Create
+
 extension CameraFocusIndicatorView {
     func create(at touchPoint: CGPoint) -> UIImageView {
         let focusIndicator = UIImageView(image: image)

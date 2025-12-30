@@ -8,7 +8,6 @@
 //
 //  Copyright ©2024 Mijick. All rights reserved.
 
-
 import Foundation
 
 public enum MCameraError: Error {

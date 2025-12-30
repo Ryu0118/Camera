@@ -8,7 +8,7 @@
 //
 //  Copyright ©2024 Mijick. All rights reserved.
 
-
+import AVKit
 import SwiftUI
 
 /**
@@ -19,7 +19,6 @@ import SwiftUI
  Handles issues related to asking for permissions, and if permissions are not granted, it displays the **Error Screen**.
 
  Optionally shows the **Captured Media Screen**, which is displayed after the user captures an image or video.
-
 
  # Customization
  All of the MCamera's default settings can be changed during initialisation.
@@ -91,34 +90,58 @@ import SwiftUI
  ```
  */
 public struct MCamera: View {
-    @ObservedObject var manager: CameraManager
+    @StateObject var manager: CameraManager
     @Namespace var namespace
     var config: Config = .init()
 
-    
+    public init() {
+        _manager = StateObject(wrappedValue: .init(
+            captureSession: AVCaptureSession(),
+            captureDeviceInputType: AVCaptureDeviceInput.self
+        ))
+    }
+
     public var body: some View { if config.isCameraConfigured {
-        ZStack(content: createContent)
-            .onDisappear(perform: onDisappear)
-            .onChange(of: manager.attributes.capturedMedia, perform: onCapturedMediaChange)
+        if #available(iOS 17.0, *) {
+            ZStack(content: createContent)
+                .onDisappear(perform: onDisappear)
+                .onChange(of: manager.attributes.capturedMedia, perform: onCapturedMediaChange)
+                .onChange(of: config.isActiveBinding?.wrappedValue) { _, isActive in
+                    guard let isActive else { return }
+                    if isActive {
+                        resumeSession()
+                    } else {
+                        pauseSession()
+                    }
+                }
+        } else {
+            // Fallback on earlier versions
+        }
     }}
 }
-private extension MCamera {
-    @ViewBuilder func createContent() -> some View {
+
+extension MCamera {
+    @ViewBuilder
+    private func createContent() -> some View {
         if let error = manager.attributes.error { createErrorScreen(error) }
-        else if let capturedMedia = manager.attributes.capturedMedia, config.capturedMediaScreen != nil { createCapturedMediaScreen(capturedMedia) }
+        else if let capturedMedia = manager.attributes.capturedMedia,
+                config.capturedMediaScreen != nil { createCapturedMediaScreen(capturedMedia) }
         else { createCameraScreen() }
     }
 }
-private extension MCamera {
-    func createErrorScreen(_ error: MCameraError) -> some View {
+
+extension MCamera {
+    private func createErrorScreen(_ error: MCameraError) -> some View {
         config.errorScreen(error, config.closeMCameraAction).erased()
     }
-    func createCapturedMediaScreen(_ media: MCameraMedia) -> some View {
+
+    private func createCapturedMediaScreen(_ media: MCameraMedia) -> some View {
         config.capturedMediaScreen?(media, namespace, onCapturedMediaRejected, onCapturedMediaAccepted)
             .erased()
             .onAppear(perform: onCaptureMediaScreenAppear)
     }
-    func createCameraScreen() -> some View {
+
+    private func createCameraScreen() -> some View {
         config.cameraScreen(manager, namespace, config.closeMCameraAction)
             .erased()
             .onAppear(perform: onCameraAppear)
@@ -126,55 +149,77 @@ private extension MCamera {
     }
 }
 
-
 // MARK: - ACTIONS
 
-
-
 // MARK: MCamera
-private extension MCamera {
-    func onDisappear() {
+
+extension MCamera {
+    private func onDisappear() {
         lockScreenOrientation(nil)
         manager.cancel()
     }
-    func onCapturedMediaChange(_ capturedMedia: MCameraMedia?) {
+
+    private func onCapturedMediaChange(_ capturedMedia: MCameraMedia?) {
         guard let capturedMedia, config.capturedMediaScreen == nil else { return }
         notifyUserOfMediaCaptured(capturedMedia)
     }
 }
-private extension MCamera {
-    func lockScreenOrientation(_ orientation: UIInterfaceOrientationMask?) {
+
+extension MCamera {
+    private func lockScreenOrientation(_ orientation: UIInterfaceOrientationMask?) {
         config.appDelegate?.orientationLock = orientation ?? .all
         UINavigationController.attemptRotationToDeviceOrientation()
     }
-    func notifyUserOfMediaCaptured(_ capturedMedia: MCameraMedia) {
+
+    private func notifyUserOfMediaCaptured(_ capturedMedia: MCameraMedia) {
         if let image = capturedMedia.getImage() { config.imageCapturedAction(image, .init(mCamera: self)) }
         else if let video = capturedMedia.getVideo() { config.videoCapturedAction(video, .init(mCamera: self)) }
     }
 }
 
 // MARK: Camera Screen
-private extension MCamera {
-    func onCameraAppear() { Task {
+
+extension MCamera {
+    private func onCameraAppear() { Task {
         do {
+            // setup() internally checks isReady and returns early if already running
             try await manager.setup()
             lockScreenOrientation(.portrait)
         } catch { print("(MijickCamera) ERROR DURING SETUP: \(error)") }
     }}
-    func onCameraDisappear() {
-        manager.cancel()
+    private func onCameraDisappear() {
+        // Note: Don't cancel here as this can be triggered by fullScreenCover/sheet overlays
+        // The camera will be properly cancelled in MCamera.onDisappear() when the entire view disappears
     }
 }
 
+// MARK: Session Control
+
+extension MCamera {
+    private func pauseSession() {
+        manager.cancel()
+    }
+
+    private func resumeSession() { Task {
+        do {
+            try await manager.resume()
+            lockScreenOrientation(.portrait)
+        } catch { print("(MijickCamera) ERROR DURING RESUME: \(error)") }
+    }}
+}
+
 // MARK: Captured Media Screen
-private extension MCamera {
-    func onCaptureMediaScreenAppear() {
+
+extension MCamera {
+    private func onCaptureMediaScreenAppear() {
         lockScreenOrientation(nil)
     }
-    func onCapturedMediaRejected() {
+
+    private func onCapturedMediaRejected() {
         manager.setCapturedMedia(nil)
     }
-    func onCapturedMediaAccepted() {
+
+    private func onCapturedMediaAccepted() {
         guard let capturedMedia = manager.attributes.capturedMedia else { return }
         notifyUserOfMediaCaptured(capturedMedia)
     }

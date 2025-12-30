@@ -8,12 +8,12 @@
 //
 //  Copyright ©2024 Mijick. All rights reserved.
 
-
-import Testing
-import SwiftUI
 @testable import MijickCamera
+import SwiftUI
+import Testing
 
-@MainActor @Suite("Camera Manager Tests") struct CameraManagerTests {
+@MainActor @Suite("Camera Manager Tests")
+struct CameraManagerTests {
     var cameraManager: CameraManager = .init(
         captureSession: MockCaptureSession(),
         captureDeviceInputType: MockDeviceInput.self
@@ -21,8 +21,10 @@ import SwiftUI
 }
 
 // MARK: Setup
+
 extension CameraManagerTests {
-    @Test("Setup: Default Attributes") func setupWithDefaultAttributes() async throws {
+    @Test("Setup: Default Attributes")
+    func setupWithDefaultAttributes() async throws {
         try await setupCamera()
 
         #expect(cameraManager.captureSession.isRunning == true)
@@ -37,7 +39,9 @@ extension CameraManagerTests {
         #expect(cameraManager.motionManager.manager.accelerometerUpdateInterval > 0)
         #expect(cameraManager.notificationCenterManager.parent != nil)
     }
-    @Test("Setup: Custom Attributes") func setupWithCustomAttributes() async throws {
+
+    @Test("Setup: Custom Attributes")
+    func setupWithCustomAttributes() async throws {
         cameraManager.attributes.cameraPosition = .front
         cameraManager.attributes.zoomFactor = 2137
         cameraManager.attributes.lightMode = .on
@@ -56,8 +60,14 @@ extension CameraManagerTests {
         #expect(currentDevice.videoZoomFactor == currentDevice.maxAvailableVideoZoomFactor)
         #expect(currentDevice.lightMode == .on)
         #expect(cameraManager.captureSession.sessionPreset == .hd1280x720)
-        #expect(currentDevice.activeVideoMinFrameDuration == .init(value: 1, timescale: Int32(currentDevice.maxFrameRate!)))
-        #expect(currentDevice.activeVideoMaxFrameDuration == .init(value: 1, timescale: Int32(currentDevice.maxFrameRate!)))
+        #expect(currentDevice.activeVideoMinFrameDuration == .init(
+            value: 1,
+            timescale: Int32(currentDevice.maxFrameRate!)
+        ))
+        #expect(currentDevice.activeVideoMaxFrameDuration == .init(
+            value: 1,
+            timescale: Int32(currentDevice.maxFrameRate!)
+        ))
         #expect(currentDevice.exposureDuration == .init(value: 1, timescale: 10))
         #expect(currentDevice.exposureTargetBias == 0.66)
         #expect(currentDevice.iso == currentDevice.maxISO)
@@ -69,7 +79,9 @@ extension CameraManagerTests {
         #expect(cameraManager.attributes.frameRate == Int32(currentDevice.maxFrameRate!))
         #expect(cameraManager.attributes.cameraExposure.iso == currentDevice.maxISO)
     }
-    @Test("Setup: Audio Source Unavailable") func setupWithAudioSourceUnavailable() async throws {
+
+    @Test("Setup: Audio Source Unavailable")
+    func setupWithAudioSourceUnavailable() async throws {
         cameraManager.attributes.isAudioSourceAvailable = false
         try await setupCamera()
 
@@ -78,20 +90,24 @@ extension CameraManagerTests {
 }
 
 // MARK: Cancel
+
 extension CameraManagerTests {
-    @Test("Cancel Camera Session") func cancelCameraSession() async throws {
+    @Test("Cancel Camera Session")
+    func cancelCameraSession() async throws {
         try await setupCamera()
         cameraManager.cancel()
 
         #expect(cameraManager.captureSession.isRunning == false)
-        #expect(cameraManager.captureSession.deviceInputs.count == 0)
-        #expect(cameraManager.captureSession.outputs.count == 0)
+        #expect(cameraManager.captureSession.deviceInputs.isEmpty)
+        #expect(cameraManager.captureSession.outputs.isEmpty)
     }
 }
 
 // MARK: Set Camera Output
+
 extension CameraManagerTests {
-    @Test("Set Camera Output") func setCameraOutput() async throws {
+    @Test("Set Camera Output")
+    func setCameraOutput() async throws {
         try await setupCamera()
 
         cameraManager.setOutputType(.photo)
@@ -103,8 +119,10 @@ extension CameraManagerTests {
 }
 
 // MARK: Set Camera Position
+
 extension CameraManagerTests {
-    @Test("Set Camera Position") func setCameraPosition() async throws {
+    @Test("Set Camera Position")
+    func setCameraPosition() async throws {
         try await setupCamera()
 
         try await cameraManager.setCameraPosition(.front)
@@ -129,8 +147,10 @@ extension CameraManagerTests {
 }
 
 // MARK: Set Camera Zoom
+
 extension CameraManagerTests {
-    @Test("Set Camera Zoom") func setCameraZoom() async throws {
+    @Test("Set Camera Zoom")
+    func setCameraZoom() async throws {
         try await setupCamera()
 
         try cameraManager.setCameraZoomFactor(2.137)
@@ -148,25 +168,32 @@ extension CameraManagerTests {
 }
 
 // MARK: Set Camera Focus
+
 extension CameraManagerTests {
-    @Test("Set Camera Focus") func setCameraFocus() async throws {
+    @Test("Set Camera Focus")
+    func setCameraFocus() async throws {
         try await setupCamera()
 
         let point = CGPoint(x: 213.7, y: 21.37)
-        let expectedPoint = CGPoint(x: point.y / cameraManager.cameraView.frame.height, y: 1 - point.x / cameraManager.cameraView.frame.width)
+        let expectedPoint = CGPoint(
+            x: point.y / cameraManager.cameraView.frame.height,
+            y: 1 - point.x / cameraManager.cameraView.frame.width
+        )
 
         try cameraManager.setCameraFocus(at: point)
         #expect(currentDevice.focusPointOfInterest == expectedPoint)
         #expect(currentDevice.exposurePointOfInterest == expectedPoint)
         #expect(currentDevice.focusMode == .autoFocus)
         #expect(currentDevice.exposureMode == .autoExpose)
-        #expect(cameraManager.cameraView.subviews.filter { $0.tag == .focusIndicatorTag }.count == 1)
+        #expect(cameraManager.cameraView.subviews.count(where: { $0.tag == .focusIndicatorTag }) == 1)
     }
 }
 
 // MARK: Set Flash Mode
+
 extension CameraManagerTests {
-    @Test("Set Flash Mode") func setFlashMode() async throws {
+    @Test("Set Flash Mode")
+    func setFlashMode() async throws {
         try await setupCamera()
 
         cameraManager.setFlashMode(.on)
@@ -181,8 +208,10 @@ extension CameraManagerTests {
 }
 
 // MARK: Set Light Mode
+
 extension CameraManagerTests {
-    @Test("Set Light Mode") func setLightMode() async throws {
+    @Test("Set Light Mode")
+    func setLightMode() async throws {
         try await setupCamera()
 
         try cameraManager.setLightMode(.on)
@@ -196,8 +225,10 @@ extension CameraManagerTests {
 }
 
 // MARK: Set Mirror Output
+
 extension CameraManagerTests {
-    @Test("Set Mirror Output") func setMirrorOutput() async throws {
+    @Test("Set Mirror Output")
+    func setMirrorOutput() async throws {
         try await setupCamera()
 
         cameraManager.setMirrorOutput(true)
@@ -209,8 +240,10 @@ extension CameraManagerTests {
 }
 
 // MARK: Set Grid Visibility
+
 extension CameraManagerTests {
-    @Test("Set Grid Visibility") func setGridVisibility() async throws {
+    @Test("Set Grid Visibility")
+    func setGridVisibility() async throws {
         try await setupCamera()
 
         cameraManager.setGridVisibility(true)
@@ -224,8 +257,10 @@ extension CameraManagerTests {
 }
 
 // MARK: Set Camera Filters
+
 extension CameraManagerTests {
-    @Test("Set Camera Filters") func setCameraFilters() async throws {
+    @Test("Set Camera Filters")
+    func setCameraFilters() async throws {
         try await setupCamera()
 
         cameraManager.setCameraFilters([.init(name: "CISepiaTone")!])
@@ -234,8 +269,10 @@ extension CameraManagerTests {
 }
 
 // MARK: Set Exposure Mode
+
 extension CameraManagerTests {
-    @Test("Set Exposure Mode") func setExposureMode() async throws {
+    @Test("Set Exposure Mode")
+    func setExposureMode() async throws {
         try await setupCamera()
 
         try cameraManager.setExposureMode(.continuousAutoExposure)
@@ -253,8 +290,10 @@ extension CameraManagerTests {
 }
 
 // MARK: Set Exposure Duration
+
 extension CameraManagerTests {
-    @Test("Set Exposure Duration") func setExposureDuration() async throws {
+    @Test("Set Exposure Duration")
+    func setExposureDuration() async throws {
         try await setupCamera()
 
         try cameraManager.setExposureDuration(.init(value: 1, timescale: 33))
@@ -262,7 +301,7 @@ extension CameraManagerTests {
         #expect(currentDevice.exposureMode == .custom)
         #expect(cameraManager.attributes.cameraExposure.duration == .init(value: 1, timescale: 33))
 
-        try cameraManager.setExposureDuration(.init(value: 1, timescale: 100000))
+        try cameraManager.setExposureDuration(.init(value: 1, timescale: 100_000))
         #expect(currentDevice.exposureDuration == currentDevice.minExposureDuration)
         #expect(currentDevice.exposureMode == .custom)
         #expect(cameraManager.attributes.cameraExposure.duration == currentDevice.minExposureDuration)
@@ -275,8 +314,10 @@ extension CameraManagerTests {
 }
 
 // MARK: Set ISO
+
 extension CameraManagerTests {
-    @Test("Set ISO") func setISO() async throws {
+    @Test("Set ISO")
+    func setISO() async throws {
         try await setupCamera()
 
         try cameraManager.setISO(1)
@@ -297,8 +338,10 @@ extension CameraManagerTests {
 }
 
 // MARK: Set Exposure Target Bias
+
 extension CameraManagerTests {
-    @Test("Set Exposure Target Bias") func setExposureTargetBias() async throws {
+    @Test("Set Exposure Target Bias")
+    func setExposureTargetBias() async throws {
         try await setupCamera()
 
         try cameraManager.setExposureTargetBias(1)
@@ -316,8 +359,10 @@ extension CameraManagerTests {
 }
 
 // MARK: Set HDR Mode
+
 extension CameraManagerTests {
-    @Test("Set HDR Mode") func setHDRMode() async throws {
+    @Test("Set HDR Mode")
+    func setHDRMode() async throws {
         try await setupCamera()
 
         try cameraManager.setHDRMode(.on)
@@ -335,8 +380,10 @@ extension CameraManagerTests {
 }
 
 // MARK: Set Resolution
+
 extension CameraManagerTests {
-    @Test("Set Resolution") func setResolution() async throws {
+    @Test("Set Resolution")
+    func setResolution() async throws {
         try await setupCamera()
 
         cameraManager.setResolution(.hd1280x720)
@@ -354,8 +401,10 @@ extension CameraManagerTests {
 }
 
 // MARK: Set Frame Rate
+
 extension CameraManagerTests {
-    @Test("Set Frame Rate") func setFrameRate() async throws {
+    @Test("Set Frame Rate")
+    func setFrameRate() async throws {
         try await setupCamera()
 
         try cameraManager.setFrameRate(45)
@@ -375,10 +424,10 @@ extension CameraManagerTests {
     }
 }
 
-
 // MARK: Helpers
-private extension CameraManagerTests {
-    func setupCamera() async throws {
+
+extension CameraManagerTests {
+    private func setupCamera() async throws {
         let cameraView = UIView(frame: .init(origin: .zero, size: .init(width: 1000, height: 1000)))
 
         cameraManager.initialize(in: cameraView)
@@ -386,6 +435,7 @@ private extension CameraManagerTests {
         await Task.sleep(seconds: 10)
     }
 }
-private extension CameraManagerTests {
-    var currentDevice: any CaptureDevice { cameraManager.getCameraInput()!.device }
+
+extension CameraManagerTests {
+    private var currentDevice: any CaptureDevice { cameraManager.getCameraInput()!.device }
 }

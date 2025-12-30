@@ -8,10 +8,10 @@
 //
 //  Copyright ©2024 Mijick. All rights reserved.
 
-
 import AVKit
 
 // MARK: Getters
+
 extension AVCaptureDevice: CaptureDevice {
     var minExposureDuration: CMTime { activeFormat.minExposureDuration }
     var maxExposureDuration: CMTime { activeFormat.maxExposureDuration }
@@ -22,16 +22,18 @@ extension AVCaptureDevice: CaptureDevice {
 }
 
 // MARK: Getters & Setters
+
 extension AVCaptureDevice {
     var lightMode: CameraLightMode {
         get { torchMode == .off ? .off : .on }
         set { torchMode = newValue == .off ? .off : .on }
     }
+
     var hdrMode: CameraHDRMode {
         get {
-            if automaticallyAdjustsVideoHDREnabled { return .auto }
-            else if isVideoHDREnabled { return .on }
-            else { return .off }
+            if automaticallyAdjustsVideoHDREnabled { .auto }
+            else if isVideoHDREnabled { .on }
+            else { .off }
         }
         set {
             automaticallyAdjustsVideoHDREnabled = newValue == .auto

@@ -8,13 +8,11 @@
 //
 //  Copyright ©2024 Mijick. All rights reserved.
 
-
 import SwiftUI
 
 struct DefaultCameraErrorScreen: MCameraErrorScreen {
     let error: MCameraError
-    let closeMCameraAction: () -> ()
-
+    let closeMCameraAction: () -> Void
 
     var body: some View {
         VStack(spacing: 0) {
@@ -32,13 +30,15 @@ struct DefaultCameraErrorScreen: MCameraErrorScreen {
         .background(Color(.mijickBackgroundPrimary).ignoresSafeArea())
     }
 }
-private extension DefaultCameraErrorScreen {
-    func createCloseButton() -> some View {
+
+extension DefaultCameraErrorScreen {
+    private func createCloseButton() -> some View {
         CloseButton(action: closeMCameraAction)
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding(.leading, 20)
     }
-    func createTitle() -> some View {
+
+    private func createTitle() -> some View {
         Text(title)
             .font(.system(size: 20, weight: .bold))
             .foregroundColor(.init(.mijickTextPrimary))
@@ -46,7 +46,8 @@ private extension DefaultCameraErrorScreen {
             .fixedSize(horizontal: false, vertical: true)
             .padding(.horizontal, 64)
     }
-    func createDescription() -> some View {
+
+    private func createDescription() -> some View {
         Text(description)
             .font(.system(size: 16, weight: .regular))
             .foregroundColor(.init(.mijickTextSecondary))
@@ -55,7 +56,8 @@ private extension DefaultCameraErrorScreen {
             .fixedSize(horizontal: false, vertical: true)
             .padding(.horizontal, 32)
     }
-    func createOpenSettingsButton() -> some View {
+
+    private func createOpenSettingsButton() -> some View {
         Button(action: openAppSettings) {
             Text(openSettingsButton)
                 .font(.system(size: 16, weight: .bold))
@@ -64,16 +66,16 @@ private extension DefaultCameraErrorScreen {
     }
 }
 
-private extension DefaultCameraErrorScreen {
-    var title: String { switch error {
-        case .microphonePermissionsNotGranted: NSLocalizedString("Enable Microphone Access", comment: "")
-        case .cameraPermissionsNotGranted: NSLocalizedString("Enable Camera Access", comment: "")
-        default: ""
+extension DefaultCameraErrorScreen {
+    private var title: String { switch error {
+    case .microphonePermissionsNotGranted: NSLocalizedString("Enable Microphone Access", comment: "")
+    case .cameraPermissionsNotGranted: NSLocalizedString("Enable Camera Access", comment: "")
+    default: ""
     }}
-    var description: String { switch error {
-        case .microphonePermissionsNotGranted: Bundle.main.infoDictionary?["NSMicrophoneUsageDescription"] as? String ?? ""
-        case .cameraPermissionsNotGranted: Bundle.main.infoDictionary?["NSCameraUsageDescription"] as? String ?? ""
-        default: ""
+    private var description: String { switch error {
+    case .microphonePermissionsNotGranted: Bundle.main.infoDictionary?["NSMicrophoneUsageDescription"] as? String ?? ""
+    case .cameraPermissionsNotGranted: Bundle.main.infoDictionary?["NSCameraUsageDescription"] as? String ?? ""
+    default: ""
     }}
-    var openSettingsButton: String { NSLocalizedString("Open Settings", comment: "") }
+    private var openSettingsButton: String { NSLocalizedString("Open Settings", comment: "") }
 }

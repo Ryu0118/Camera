@@ -8,9 +8,10 @@
 //
 //  Copyright ©2024 Mijick. All rights reserved.
 
-
 import Foundation
 
-extension MCamera { @MainActor public struct Controller {
-    let mCamera: MCamera
-}}
+extension MCamera { @MainActor
+    public struct Controller {
+        let mCamera: MCamera
+    }
+}

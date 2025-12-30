@@ -8,7 +8,6 @@
 //
 //  Copyright ©2024 Mijick. All rights reserved.
 
-
 import SwiftUI
 
 struct BottomButton: View {
@@ -16,15 +15,15 @@ struct BottomButton: View {
     let iconColor: Color
     let backgroundColor: Color
     let rotationAngle: Angle
-    let action: () -> ()
-
+    let action: () -> Void
 
     var body: some View {
         Button(action: action, label: createButtonLabel).buttonStyle(ButtonScaleStyle())
     }
 }
-private extension BottomButton {
-    func createButtonLabel() -> some View {
+
+extension BottomButton {
+    private func createButtonLabel() -> some View {
         Image(icon)
             .resizable()
             .frame(width: 26, height: 26)

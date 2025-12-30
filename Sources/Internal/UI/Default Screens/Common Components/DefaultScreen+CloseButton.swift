@@ -8,19 +8,18 @@
 //
 //  Copyright ©2024 Mijick. All rights reserved.
 
-
 import SwiftUI
 
 struct CloseButton: View {
-    let action: () -> ()
-
+    let action: () -> Void
 
     var body: some View {
         Button(action: action, label: createButtonLabel)
     }
 }
-private extension CloseButton {
-    func createButtonLabel() -> some View {
+
+extension CloseButton {
+    private func createButtonLabel() -> some View {
         Image(.mijickIconCancel)
             .resizable()
             .frame(width: 24, height: 24)

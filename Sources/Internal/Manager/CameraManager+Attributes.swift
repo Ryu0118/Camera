@@ -8,12 +8,12 @@
 //
 //  Copyright ©2024 Mijick. All rights reserved.
 
-
 import AVKit
 
 struct CameraManagerAttributes {
-    var capturedMedia: MCameraMedia? = nil
-    var error: MCameraError? = nil
+    var isReady: Bool = false
+    var capturedMedia: MCameraMedia?
+    var error: MCameraError?
 
     var outputType: CameraOutputType = .photo
     var cameraPosition: CameraPosition = .back

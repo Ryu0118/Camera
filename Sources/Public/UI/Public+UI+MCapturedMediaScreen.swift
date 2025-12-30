@@ -8,14 +8,12 @@
 //
 //  Copyright ©2024 Mijick. All rights reserved.
 
-
 import SwiftUI
 
 /**
  Screen that displays the captured media.
 
  - important: A view conforming to **MCapturedMediaScreen** has to be passed directly to ``MCamera``. See ``MCamera/setCapturedMediaScreen(_:)`` for more details.
-
 
  ## Usage
  ```swift
@@ -35,7 +33,6 @@ import SwiftUI
     let namespace: Namespace.ID
     let retakeAction: () -> ()
     let acceptMediaAction: () -> ()
-
 
     var body: some View {
         VStack(spacing: 0) {
@@ -77,6 +74,6 @@ import SwiftUI
 public protocol MCapturedMediaScreen: View {
     var capturedMedia: MCameraMedia { get }
     var namespace: Namespace.ID { get }
-    var retakeAction: () -> () { get }
-    var acceptMediaAction: () -> () { get }
+    var retakeAction: () -> Void { get }
+    var acceptMediaAction: () -> Void { get }
 }

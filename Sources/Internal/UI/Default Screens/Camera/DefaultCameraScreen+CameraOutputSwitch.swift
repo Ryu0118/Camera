@@ -8,12 +8,10 @@
 //
 //  Copyright ©2024 Mijick. All rights reserved.
 
-
 import SwiftUI
 
 extension DefaultCameraScreen { struct CameraOutputSwitch: View {
     let parent: DefaultCameraScreen
-
 
     var body: some View {
         HStack(spacing: 4) {
@@ -25,8 +23,8 @@ extension DefaultCameraScreen { struct CameraOutputSwitch: View {
         .mask(Capsule())
     }
 }}
-private extension DefaultCameraScreen.CameraOutputSwitch {
-    func createOutputTypeButton(_ outputType: CameraOutputType) -> some View {
+extension DefaultCameraScreen.CameraOutputSwitch {
+    fileprivate func createOutputTypeButton(_ outputType: CameraOutputType) -> some View {
         Button(icon: getOutputTypeButtonIcon(outputType), active: isOutputTypeButtonActive(outputType)) {
             parent.setOutputType(outputType)
         }
@@ -34,30 +32,30 @@ private extension DefaultCameraScreen.CameraOutputSwitch {
     }
 }
 
-private extension DefaultCameraScreen.CameraOutputSwitch {
-    func getOutputTypeButtonIcon(_ outputType: CameraOutputType) -> ImageResource { switch outputType {
-        case .photo: return .mijickIconPhoto
-        case .video: return .mijickIconVideo
+extension DefaultCameraScreen.CameraOutputSwitch {
+    fileprivate func getOutputTypeButtonIcon(_ outputType: CameraOutputType) -> ImageResource { switch outputType {
+    case .photo: .mijickIconPhoto
+    case .video: .mijickIconVideo
     }}
-    func isOutputTypeButtonActive(_ outputType: CameraOutputType) -> Bool {
+    fileprivate func isOutputTypeButtonActive(_ outputType: CameraOutputType) -> Bool {
         outputType == parent.cameraOutputType
     }
 }
 
-
 // MARK: Button
-fileprivate struct Button: View {
+
+private struct Button: View {
     let icon: ImageResource
     let active: Bool
-    let action: () -> ()
-
+    let action: () -> Void
 
     var body: some View {
         SwiftUI.Button(action: action, label: createButtonLabel).buttonStyle(ButtonScaleStyle())
     }
 }
-private extension Button {
-    func createButtonLabel() -> some View {
+
+extension Button {
+    private func createButtonLabel() -> some View {
         Image(icon)
             .resizable()
             .frame(width: iconSize, height: iconSize)
@@ -67,13 +65,14 @@ private extension Button {
             .mask(Circle())
     }
 }
-private extension Button {
-    var iconSize: CGFloat { switch active {
-        case true: 28
-        case false: 20
+
+extension Button {
+    private var iconSize: CGFloat { switch active {
+    case true: 28
+    case false: 20
     }}
-    var iconColor: Color { switch active {
-        case true: .init(.mijickBackgroundYellow)
-        case false: .init(.mijickTextTertiary)
+    private var iconColor: Color { switch active {
+    case true: .init(.mijickBackgroundYellow)
+    case false: .init(.mijickTextTertiary)
     }}
 }

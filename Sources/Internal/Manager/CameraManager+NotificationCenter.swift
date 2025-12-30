@@ -8,30 +8,43 @@
 //
 //  Copyright ©2024 Mijick. All rights reserved.
 
-
 import Foundation
 
-@MainActor class CameraManagerNotificationCenter {
+@MainActor
+class CameraManagerNotificationCenter {
     private(set) var parent: CameraManager!
 }
 
 // MARK: Setup
+
 extension CameraManagerNotificationCenter {
     func setup(parent: CameraManager) {
         self.parent = parent
-        NotificationCenter.default.addObserver(self, selector: #selector(handleSessionWasInterrupted), name: .AVCaptureSessionWasInterrupted, object: parent.captureSession)
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(handleSessionWasInterrupted),
+            name: .AVCaptureSessionWasInterrupted,
+            object: parent.captureSession
+        )
     }
 }
-private extension CameraManagerNotificationCenter {
-    @objc func handleSessionWasInterrupted() {
+
+extension CameraManagerNotificationCenter {
+    @objc
+    private func handleSessionWasInterrupted() {
         parent.attributes.lightMode = .off
         parent.videoOutput.reset()
     }
 }
 
 // MARK: Reset
+
 extension CameraManagerNotificationCenter {
     func reset() {
-        NotificationCenter.default.removeObserver(self, name: .AVCaptureSessionWasInterrupted, object: parent?.captureSession)
+        NotificationCenter.default.removeObserver(
+            self,
+            name: .AVCaptureSessionWasInterrupted,
+            object: parent?.captureSession
+        )
     }
 }
