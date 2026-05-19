@@ -19,4 +19,9 @@ protocol CaptureDeviceInput: NSObject {
     // MARK: Methods
 
     static func get(mediaType: AVMediaType, position: AVCaptureDevice.Position?) -> Self?
+    static func get(
+        mediaType: AVMediaType,
+        position: AVCaptureDevice.Position?,
+        deviceType: AVCaptureDevice.DeviceType?
+    ) -> Self?
 }

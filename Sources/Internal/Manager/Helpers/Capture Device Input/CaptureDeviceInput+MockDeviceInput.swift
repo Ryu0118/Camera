@@ -18,6 +18,11 @@ class MockDeviceInput: NSObject, CaptureDeviceInput { override required init() {
 
 extension MockDeviceInput {
     static func get(mediaType: AVMediaType, position: AVCaptureDevice.Position?) -> Self? { .init() }
+    static func get(
+        mediaType: AVMediaType,
+        position: AVCaptureDevice.Position?,
+        deviceType: AVCaptureDevice.DeviceType?
+    ) -> Self? { .init() }
 }
 
 // MARK: Equatable
