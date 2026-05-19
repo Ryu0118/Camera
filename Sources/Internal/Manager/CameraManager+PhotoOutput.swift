@@ -73,9 +73,18 @@ extension CameraManagerPhotoOutput: @preconcurrency AVCapturePhotoCaptureDelegat
         error: (any Error)?
     ) {
         guard let parent else { return }
+
+        if let error {
+            parent.attributes.error = .photoCaptureFailed(error)
+            return
+        }
+
         guard let imageData = photo.fileDataRepresentation(),
               let ciImage = CIImage(data: imageData)
-        else { return }
+        else {
+            parent.attributes.error = .photoCaptureProducedNoData
+            return
+        }
 
         let capturedCIImage = prepareCIImage(ciImage, parent.attributes.cameraFilters)
         let capturedCGImage = prepareCGImage(capturedCIImage)

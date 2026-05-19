@@ -243,7 +243,10 @@ extension CameraManager {
 
 extension CameraManager {
     func setOutputType(_ outputType: CameraOutputType) {
-        guard outputType != attributes.outputType, !isChanging else { return }
+        guard outputType != attributes.outputType,
+              !isChanging,
+              !videoOutput.output.isRecording
+        else { return }
         attributes.outputType = outputType
         applySessionPresetForOutputType()
     }
@@ -493,7 +496,10 @@ extension CameraManager {
 
 extension CameraManager {
     func setResolution(_ resolution: AVCaptureSession.Preset) {
-        guard resolution != attributes.resolution, !isChanging else { return }
+        guard resolution != attributes.resolution,
+              !isChanging,
+              !videoOutput.output.isRecording
+        else { return }
 
         attributes.resolution = resolution
         if attributes.outputType == .video {
