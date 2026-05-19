@@ -19,6 +19,7 @@ extension AVCaptureDevice: CaptureDevice {
     var maxISO: Float { activeFormat.maxISO }
     var minFrameRate: Float64? { activeFormat.videoSupportedFrameRateRanges.first?.minFrameRate }
     var maxFrameRate: Float64? { activeFormat.videoSupportedFrameRateRanges.first?.maxFrameRate }
+    var supportedMaxPhotoDimensions: [CMVideoDimensions] { activeFormat.supportedMaxPhotoDimensions }
 }
 
 // MARK: Getters & Setters

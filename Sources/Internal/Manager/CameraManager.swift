@@ -130,12 +130,19 @@ extension CameraManager {
 
 extension CameraManager {
     private func setupCameraLayer() {
-        captureSession.sessionPreset = attributes.resolution
+        captureSession.sessionPreset = initialSessionPreset()
 
         cameraLayer.session = captureSession as? AVCaptureSession
         cameraLayer.videoGravity = .resizeAspectFill
         cameraLayer.isHidden = true
         cameraView.layer.addSublayer(cameraLayer)
+    }
+
+    private func initialSessionPreset() -> AVCaptureSession.Preset {
+        switch attributes.outputType {
+        case .photo: .photo
+        case .video: attributes.resolution
+        }
     }
 
     private func setupDeviceInputs() throws(MCameraError) {
@@ -238,6 +245,16 @@ extension CameraManager {
     func setOutputType(_ outputType: CameraOutputType) {
         guard outputType != attributes.outputType, !isChanging else { return }
         attributes.outputType = outputType
+        applySessionPresetForOutputType()
+    }
+
+    private func applySessionPresetForOutputType() {
+        let targetPreset: AVCaptureSession.Preset = switch attributes.outputType {
+        case .photo: .photo
+        case .video: attributes.resolution
+        }
+        guard captureSession.sessionPreset != targetPreset else { return }
+        captureSession.sessionPreset = targetPreset
     }
 }
 
@@ -476,10 +493,12 @@ extension CameraManager {
 
 extension CameraManager {
     func setResolution(_ resolution: AVCaptureSession.Preset) {
-        guard resolution != attributes.resolution, resolution != attributes.resolution, !isChanging else { return }
+        guard resolution != attributes.resolution, !isChanging else { return }
 
-        captureSession.sessionPreset = resolution
         attributes.resolution = resolution
+        if attributes.outputType == .video {
+            captureSession.sessionPreset = resolution
+        }
     }
 }
 

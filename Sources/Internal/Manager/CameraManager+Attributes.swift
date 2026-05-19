@@ -22,6 +22,7 @@ struct CameraManagerAttributes {
     var flashMode: CameraFlashMode = .off
     var lightMode: CameraLightMode = .off
     var resolution: AVCaptureSession.Preset = .hd1920x1080
+    var photoMaxDimensions: CMVideoDimensions?
     var frameRate: Int32 = 30
     var cameraExposure: CameraExposure = .init()
     var hdrMode: CameraHDRMode = .auto

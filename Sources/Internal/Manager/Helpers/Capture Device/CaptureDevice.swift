@@ -31,6 +31,7 @@ protocol CaptureDevice: NSObject {
     var hasTorch: Bool { get }
     var isExposurePointOfInterestSupported: Bool { get }
     var isFocusPointOfInterestSupported: Bool { get }
+    var supportedMaxPhotoDimensions: [CMVideoDimensions] { get }
 
     // MARK: Getters & Setters
 
@@ -59,7 +60,7 @@ protocol CaptureDevice: NSObject {
 
 extension CaptureDevice {
     func setZoomFactor(_ factor: CGFloat) {
-        let factor = max(min(factor, min(maxAvailableVideoZoomFactor, 5)), minAvailableVideoZoomFactor)
+        let factor = max(min(factor, maxAvailableVideoZoomFactor), minAvailableVideoZoomFactor)
         videoZoomFactor = factor
     }
 }

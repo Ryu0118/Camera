@@ -146,6 +146,22 @@ extension MCameraScreen {
     public func setResolution(_ resolution: AVCaptureSession.Preset) { cameraManager.setResolution(resolution) }
 
     /**
+     Set the maximum photo dimensions (used as `AVCapturePhotoSettings.maxPhotoDimensions`).
+
+     - note: Pass a value from ``getSupportedMaxPhotoDimensions()`` to obtain a valid setting.
+     */
+    public func setPhotoMaxDimensions(_ dimensions: CMVideoDimensions) {
+        cameraManager.setPhotoMaxDimensions(dimensions)
+    }
+
+    /**
+     Supported max photo dimensions for the currently active capture device.
+     */
+    public func getSupportedMaxPhotoDimensions() -> [CMVideoDimensions] {
+        cameraManager.getSupportedMaxPhotoDimensions()
+    }
+
+    /**
      Set the camera frame rate.
 
      - important: Changing the resolution may affect the maximum frame rate that can be set.

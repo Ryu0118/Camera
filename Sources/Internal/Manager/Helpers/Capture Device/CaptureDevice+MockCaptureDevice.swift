@@ -31,6 +31,7 @@ class MockCaptureDevice: NSObject, CaptureDevice {
     var hasTorch: Bool { true }
     var isExposurePointOfInterestSupported: Bool { true }
     var isFocusPointOfInterestSupported: Bool { true }
+    var supportedMaxPhotoDimensions: [CMVideoDimensions] { [CMVideoDimensions(width: 4032, height: 3024)] }
 
     // MARK: Setters
 

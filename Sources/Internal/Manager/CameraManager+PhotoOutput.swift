@@ -18,6 +18,10 @@ class CameraManagerPhotoOutput: NSObject {
     func setup(parent: CameraManager) throws(MCameraError) {
         self.parent = parent
         try parent.captureSession.add(output: output)
+        output.maxPhotoQualityPrioritization = .quality
+        if let dims = parent.attributes.photoMaxDimensions {
+            output.maxPhotoDimensions = dims
+        }
     }
 }
 
@@ -44,6 +48,10 @@ extension CameraManagerPhotoOutput {
     private func getPhotoOutputSettings(parent: CameraManager) -> AVCapturePhotoSettings {
         let settings = AVCapturePhotoSettings()
         settings.flashMode = parent.attributes.flashMode.toDeviceFlashMode()
+        settings.photoQualityPrioritization = .quality
+        if let dims = parent.attributes.photoMaxDimensions {
+            settings.maxPhotoDimensions = dims
+        }
         return settings
     }
 
