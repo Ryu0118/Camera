@@ -43,26 +43,21 @@ extension CameraMetalView {
 
     #if targetEnvironment(simulator)
         private func setupSimulatorMockPreview(parent: CameraManager) {
-            print("🎬 [Simulator] setupSimulatorMockPreview called")
-
-            // Load mock image from app bundle (Development Assets)
+            // Load mock image from app bundle
             guard let mockImage = UIImage(named: "MockCameraPreview") else {
-                print("❌ [Simulator] Failed to load MockCameraPreview image")
                 return
             }
-            print("✅ [Simulator] MockCameraPreview loaded: \(mockImage.size)")
 
-            guard let cgImage = mockImage.cgImage else {
-                print("❌ [Simulator] Failed to get cgImage")
-                return
-            }
-            print("✅ [Simulator] cgImage obtained")
+            // Use UIImageView instead of Metal rendering for Simulator
+            let imageView = UIImageView(image: mockImage)
+            imageView.contentMode = .scaleAspectFill
+            imageView.clipsToBounds = true
+            imageView.frame = parent.cameraView.bounds
+            imageView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
 
-            let ciImage = CIImage(cgImage: cgImage)
-            currentFrame = ciImage
+            // Insert at the bottom so grid overlay appears on top
+            parent.cameraView.insertSubview(imageView, at: 0)
             parent.cameraView.alpha = 1
-            print("✅ [Simulator] currentFrame set, calling draw()")
-            draw()
         }
     #endif
 }
@@ -75,7 +70,11 @@ extension CameraMetalView {
     }
 
     private func configureMetalView(metalDevice: MTLDevice) {
-        self.parent?.cameraView.alpha = 0
+        // Keep alpha at 0 until camera is ready - will be set to 1 immediately (no animation)
+        // Only set to 0 on first setup, not on resume (to avoid white flash)
+        if self.parent?.cameraView.alpha != 1 {
+            self.parent?.cameraView.alpha = 0
+        }
 
         self.delegate = self
         self.device = metalDevice
@@ -95,9 +94,8 @@ extension CameraMetalView {
 extension CameraMetalView {
     func performCameraEntranceAnimation() {
         guard let parent else { return }
-        UIView.animate(withDuration: 0.33) {
-            parent.cameraView.alpha = 1
-        }
+        // Show camera immediately without animation
+        parent.cameraView.alpha = 1
     }
 }
 
