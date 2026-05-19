@@ -19,9 +19,12 @@ class CameraManagerPhotoOutput: NSObject {
         self.parent = parent
         try parent.captureSession.add(output: output)
         output.maxPhotoQualityPrioritization = .quality
-        if let dims = parent.attributes.photoMaxDimensions {
-            output.maxPhotoDimensions = dims
-        }
+        // Do NOT assign `output.maxPhotoDimensions` here. At this point the output is added to
+        // the session but its video connection to the source device may not yet be established,
+        // so the setter throws:
+        //   "May not be set until connected to a video source device with a non-nil activeFormat"
+        // The dimensions are (re)applied later via `setPhotoMaxDimensions(_:)`, which the host
+        // app calls once the camera screen appears, after the session is running.
     }
 }
 
@@ -49,18 +52,29 @@ extension CameraManagerPhotoOutput {
         let settings = AVCapturePhotoSettings()
         settings.flashMode = parent.attributes.flashMode.toDeviceFlashMode()
         settings.photoQualityPrioritization = .quality
+        // Re-clamp against the device's *current* activeFormat. The cached attribute can become
+        // stale after a camera-position switch (e.g. WideAngle -> TripleCamera) because the new
+        // virtual device's activeFormat reports a different supportedMaxPhotoDimensions set.
+        // Setting an unsupported value here raises NSInvalidArgumentException.
         if let dims = parent.attributes.photoMaxDimensions {
-            settings.maxPhotoDimensions = dims
+            let supported = parent.getSupportedMaxPhotoDimensions()
+            if supported.contains(where: { $0.width == dims.width && $0.height == dims.height }) {
+                settings.maxPhotoDimensions = dims
+            }
         }
         return settings
     }
 
     private func configureOutput(parent: CameraManager) {
-        guard let connection = output.connection(with: .video), connection.isVideoMirroringSupported else { return }
+        guard let connection = output.connection(with: .video) else { return }
 
-        connection.isVideoMirrored = parent.attributes.mirrorOutput ? parent.attributes
-            .cameraPosition != .front : parent.attributes.cameraPosition == .front
-        connection.videoOrientation = parent.attributes.deviceOrientation
+        if connection.isVideoMirroringSupported {
+            connection.isVideoMirrored = parent.attributes.mirrorOutput ? parent.attributes
+                .cameraPosition != .front : parent.attributes.cameraPosition == .front
+        }
+        if connection.isVideoOrientationSupported {
+            connection.videoOrientation = parent.attributes.deviceOrientation
+        }
     }
 }
 

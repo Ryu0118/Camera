@@ -169,6 +169,13 @@ extension CameraManager {
         try setupDevice(device)
         resetAttributes(device: device)
         cameraMetalView.performCameraEntranceAnimation()
+        // Re-apply any pending photo dimensions now that the session is running and the
+        // photo output has a non-nil activeFormat. Earlier setPhotoMaxDimensions calls
+        // (made before connection was established) only cached the value into attributes.
+        if let pending = attributes.photoMaxDimensions {
+            attributes.photoMaxDimensions = nil
+            setPhotoMaxDimensions(pending)
+        }
         attributes.isReady = true
     }}
 }

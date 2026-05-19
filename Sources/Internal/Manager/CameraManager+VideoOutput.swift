@@ -68,11 +68,15 @@ extension CameraManagerVideoOutput {
     }
 
     private func configureOutput(parent: CameraManager) {
-        guard let connection = output.connection(with: .video), connection.isVideoMirroringSupported else { return }
+        guard let connection = output.connection(with: .video) else { return }
 
-        connection.isVideoMirrored = parent.attributes.mirrorOutput ? parent.attributes
-            .cameraPosition != .front : parent.attributes.cameraPosition == .front
-        connection.videoOrientation = parent.attributes.deviceOrientation
+        if connection.isVideoMirroringSupported {
+            connection.isVideoMirrored = parent.attributes.mirrorOutput ? parent.attributes
+                .cameraPosition != .front : parent.attributes.cameraPosition == .front
+        }
+        if connection.isVideoOrientationSupported {
+            connection.videoOrientation = parent.attributes.deviceOrientation
+        }
     }
 
     private func storeLastFrame(parent: CameraManager) {
