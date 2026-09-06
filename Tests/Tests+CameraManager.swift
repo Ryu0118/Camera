@@ -8,6 +8,7 @@
 //
 //  Copyright ©2024 Mijick. All rights reserved.
 
+import AVKit
 @testable import MijickCamera
 import SwiftUI
 import Testing
@@ -438,4 +439,28 @@ extension CameraManagerTests {
 
 extension CameraManagerTests {
     private var currentDevice: any CaptureDevice { cameraManager.getCameraInput()!.device }
+}
+
+// MARK: - Resume Tests
+
+@MainActor @Suite("Verifies resume() does not crash when running with a real (non-mock) capture device input on the simulator")
+struct CameraManagerResumeTests {
+    var cameraManager: CameraManager = .init(
+        captureSession: AVCaptureSession(),
+        captureDeviceInputType: AVCaptureDeviceInput.self
+    )
+
+    @Test("resuming after cancel() does not fail with .cannotSetupInput on the simulator")
+    func resumeSucceedsOnSimulatorAfterCancel() async throws {
+        let cameraView = UIView(frame: .init(origin: .zero, size: .init(width: 1000, height: 1000)))
+        cameraManager.initialize(in: cameraView)
+        try await cameraManager.setup()
+        #expect(cameraManager.isReady)
+
+        cameraManager.cancel()
+        #expect(!cameraManager.isReady)
+
+        try await cameraManager.resume()
+        #expect(cameraManager.isReady)
+    }
 }

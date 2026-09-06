@@ -94,18 +94,7 @@ extension CameraManager {
             cameraGridView.setup(parent: self)
             attributes.isReady = true
         #else
-            try await permissionsManager.requestAccess(parent: self)
-
-            setupCameraLayer()
-            try setupDeviceInputs()
-            try setupDeviceOutput()
-            try setupFrameRecorder()
-            notificationCenterManager.setup(parent: self)
-            motionManager.setup(parent: self)
-            try cameraMetalView.setup(parent: self)
-            cameraGridView.setup(parent: self)
-
-            startSession()
+            try await setupLiveCaptureSession()
         #endif
     }
 
@@ -113,6 +102,17 @@ extension CameraManager {
     func resume() async throws(MCameraError) {
         guard !attributes.isReady else { return }
 
+        #if targetEnvironment(simulator)
+            // On Simulator, skip camera setup and show mock preview
+            try cameraMetalView.setup(parent: self)
+            cameraGridView.setup(parent: self)
+            attributes.isReady = true
+        #else
+            try await setupLiveCaptureSession()
+        #endif
+    }
+
+    private func setupLiveCaptureSession() async throws(MCameraError) {
         try await permissionsManager.requestAccess(parent: self)
 
         setupCameraLayer()
