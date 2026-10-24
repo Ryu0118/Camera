@@ -37,6 +37,8 @@ extension CameraBridgeView {
     }
 
     private func setupPinchGesture(_ context: Context) {
+        guard cameraManager.attributes.isPinchToZoomEnabled else { return }
+
         let pinchRecognizer = UIPinchGestureRecognizer(
             target: context.coordinator,
             action: #selector(context.coordinator.onPinchGesture)

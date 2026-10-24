@@ -541,6 +541,9 @@ extension CameraManager {
 extension CameraManager {
     var hasFlash: Bool { getCameraInput()?.device.hasFlash ?? false }
     var hasLight: Bool { getCameraInput()?.device.hasTorch ?? false }
+    var minZoomFactor: CGFloat { getCameraInput()?.device.minAvailableVideoZoomFactor ?? 1 }
+    var maxZoomFactor: CGFloat { getCameraInput()?.device.maxAvailableVideoZoomFactor ?? 1 }
+    var displayZoomFactorMultiplier: CGFloat { getCameraInput()?.device.displayVideoZoomFactorMultiplier ?? 1 }
 }
 
 extension CameraManager {

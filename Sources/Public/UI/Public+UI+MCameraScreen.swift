@@ -251,6 +251,10 @@ extension MCameraScreen {
 extension MCameraScreen {
     public var hasFlash: Bool { cameraManager.hasFlash }
     public var hasLight: Bool { cameraManager.hasLight }
+    public var minZoomFactor: CGFloat { cameraManager.minZoomFactor }
+    public var maxZoomFactor: CGFloat { cameraManager.maxZoomFactor }
+    /// Multiply ``zoomFactor`` by this value to get the zoom shown by the system Camera app (e.g. 0.5x for ultra-wide).
+    public var displayZoomFactorMultiplier: CGFloat { cameraManager.displayZoomFactorMultiplier }
     public var recordingTime: MTime { cameraManager.videoOutput.recordingTime }
     public var isRecording: Bool { cameraManager.videoOutput.timer.timerStatus == .running }
     public var isOrientationLocked: Bool {
