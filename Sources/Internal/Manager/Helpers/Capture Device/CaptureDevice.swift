@@ -19,6 +19,7 @@ protocol CaptureDevice: NSObject {
     var iso: Float { get }
     var minAvailableVideoZoomFactor: CGFloat { get }
     var maxAvailableVideoZoomFactor: CGFloat { get }
+    var displayVideoZoomFactorMultiplier: CGFloat { get }
     var minExposureDuration: CMTime { get }
     var maxExposureDuration: CMTime { get }
     var minISO: Float { get }

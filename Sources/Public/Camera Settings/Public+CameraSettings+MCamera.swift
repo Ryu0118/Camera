@@ -281,6 +281,15 @@ extension MCamera {
     }
 
     /**
+     Changes whether the built-in pinch gesture zooms the camera.
+
+     - note: Disable it to handle zooming with your own gesture through ``MCameraScreen/setZoomFactor(_:)``.
+     */
+    public func setPinchToZoomEnabled(_ isEnabled: Bool) -> Self { manager.attributes.isPinchToZoomEnabled = isEnabled
+        return self
+    }
+
+    /**
      Changes the shape of the focus indicator visible when touching anywhere on the camera screen.
      */
     public func setFocusImage(_ image: UIImage) -> Self { manager.cameraMetalView.focusIndicator.image = image
