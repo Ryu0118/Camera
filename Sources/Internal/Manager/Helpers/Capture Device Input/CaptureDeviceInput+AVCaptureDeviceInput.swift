@@ -77,11 +77,13 @@ extension AVCaptureDeviceInput: CaptureDeviceInput {
     // On iPhone Duo both front cameras are ultra-wide; the Virtual Front Camera, which switches
     // automatically when the device opens or closes, is found by searching front Wide and Ultra Wide types.
     // Wide comes first, so devices whose only front camera is Wide keep selecting the same device.
+    // A virtual device is preferred so the physical inner/outer cameras are not picked on iPhone Duo.
     private static func frontCamera() -> AVCaptureDevice? {
-        AVCaptureDevice.DiscoverySession(
+        let devices = AVCaptureDevice.DiscoverySession(
             deviceTypes: [.builtInWideAngleCamera, .builtInUltraWideCamera],
             mediaType: .video,
             position: .front
-        ).devices.first
+        ).devices
+        return devices.first(where: \.isVirtualDevice) ?? devices.first
     }
 }
